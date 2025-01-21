@@ -1,5 +1,5 @@
 from app.models.base import BaseModel
-from ..helpers.enums import MealType
+from app.helpers.enums import MealType
 from sqlalchemy import Column, String, Enum
 
 class Recipe(BaseModel):
