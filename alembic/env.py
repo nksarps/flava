@@ -3,6 +3,7 @@ from decouple import config as env
 from app.config.database import Base
 from app.models.base import BaseModel
 from app.models.recipe import Recipe
+from app.models.user import User
 
 from logging.config import fileConfig
 
