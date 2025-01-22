@@ -2,6 +2,8 @@ from app.config.database import get_db
 from app.helpers.enums import MealType
 from app.models.recipe import Recipe
 from app.schemas.recipe import RecipeCreate, RecipeResponse, RecipeUpdate
+from app.utils.auth import get_current_user
+from app.models.user import User
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
@@ -9,11 +11,15 @@ from uuid import UUID
 
 router = APIRouter(
     prefix="/recipes",
-    tags=["recipe"]
+    tags=["recipes"]
 )
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-async def create_recipe(body: RecipeCreate, session: Session = Depends(get_db)) -> RecipeResponse:
+async def create_recipe(
+    body: RecipeCreate, 
+    session: Session = Depends(get_db), 
+    current_user: User = Depends(get_current_user)
+) -> RecipeResponse:
     recipe = Recipe(
         name=body.name,
         description=body.description,
@@ -30,12 +36,19 @@ async def create_recipe(body: RecipeCreate, session: Session = Depends(get_db)) 
     return recipe
 
 @router.get("/", status_code=status.HTTP_200_OK)
-async def get_recipes(session: Session = Depends(get_db)) -> List[RecipeResponse]:
+async def get_recipes(
+        session: Session = Depends(get_db),
+        current_user: User = Depends(get_current_user)
+) -> List[RecipeResponse]:
     recipes = session.query(Recipe).all()
     return recipes
 
 @router.get("/filter", status_code=status.HTTP_200_OK)
-async def filter_recipe_by_meal_type(type: MealType, session: Session = Depends(get_db)) -> List[RecipeResponse]:
+async def filter_recipe_by_meal_type(
+    type: MealType, 
+    session: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+) -> List[RecipeResponse]:
     recipes = session.query(Recipe).filter_by(meal_type=type).all()
 
     if not recipes:
@@ -47,7 +60,11 @@ async def filter_recipe_by_meal_type(type: MealType, session: Session = Depends(
     return recipes
 
 @router.get("/search", status_code=status.HTTP_200_OK)
-async def search_recipe(name:str, session: Session = Depends(get_db)):
+async def search_recipe(
+    name:str, 
+    session: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+) -> List[RecipeResponse]:
     recipes = session.query(Recipe).filter(Recipe.name.ilike(f'%{name}%')).all()
 
     if not recipes:
@@ -59,7 +76,11 @@ async def search_recipe(name:str, session: Session = Depends(get_db)):
     return recipes
 
 @router.get("/{id}", status_code=status.HTTP_200_OK)
-async def get_recipe_with_id(id: UUID, session: Session = Depends(get_db)) -> RecipeResponse:
+async def get_recipe_with_id(
+    id: UUID, 
+    session: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+) -> RecipeResponse:
     recipe = session.query(Recipe).get(id)
 
     if not recipe:
@@ -71,7 +92,12 @@ async def get_recipe_with_id(id: UUID, session: Session = Depends(get_db)) -> Re
     return recipe
 
 @router.put("/{id}", status_code=status.HTTP_200_OK)
-async def update_recipe(id: UUID, body: RecipeUpdate, session: Session = Depends(get_db)) -> RecipeResponse:
+async def update_recipe(
+    id: UUID, 
+    body: RecipeUpdate, 
+    session: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+) -> RecipeResponse:
     recipe = session.query(Recipe).get(id)
 
     if not recipe:
@@ -89,7 +115,11 @@ async def update_recipe(id: UUID, body: RecipeUpdate, session: Session = Depends
     return recipe
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_recipe(id: UUID, session: Session = Depends(get_db)) -> None:
+async def delete_recipe(
+    id: UUID, 
+    session: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+) -> None:
     recipe = session.query(Recipe).get(id)
 
     if not recipe:
