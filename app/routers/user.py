@@ -3,6 +3,8 @@ from datetime import timedelta
 from decouple import config as env
 
 from fastapi import APIRouter, Depends, HTTPException, status
+
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from app.config.database import get_db
@@ -17,20 +19,30 @@ router = APIRouter(
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_user(body: UserCreate, session: Session = Depends(get_db)) -> UserResponse:
+    existing_user = session.query(User).filter(
+        or_(User.email == body.email, User.username == body.username)
+    ).first()
+
+    if existing_user:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail='User with this username or email already exists'
+        )
+
     hashed_pwd = hash_password(body.password)
 
-    user = User(
+    new_user = User(
         name=body.name,
         email=body.email,
         username=body.username,
         password=hashed_pwd
     )
 
-    session.add(user)
+    session.add(new_user)
     session.commit()
-    session.refresh(user)
+    session.refresh(new_user)
 
-    return user
+    return new_user
 
 @router.post("/login", status_code=status.HTTP_200_OK)
 async def login(body: UserLogin, session: Session = Depends(get_db)):
