@@ -126,7 +126,7 @@ async def password_reset_request(body: PasswordReset, background_tasks: Backgrou
 
     return {'message': 'Password reset email sent successfully'}
 
-@router.put('reset-password', status_code=status.HTTP_200_OK)
+@router.put('/reset-password', status_code=status.HTTP_200_OK)
 async def reset_password(token: str, new_password:str, session: Session = Depends(get_db)):
     try:
         email = serializer.loads(token, salt='password-reset', max_age=3600)
