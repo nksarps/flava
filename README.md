@@ -57,8 +57,8 @@ Below are the available API endpoints for interacting with the Flava API:
 | POST   | `/users/login`     | Login user & retrieve token     |
 | GET   | `/users/verify-email`     | Verify user via email    |
 | POST   | `/users/password-reset-request`     | Request password reset     |
-| POST   | `/users/reset-password`     | Reset user password     |
-| POST   | `/users/{id}`     | Get user with ID     |
+| PUT   | `/users/reset-password`     | Reset user password     |
+| GET   | `/users/{id}`     | Get user with ID     |
 
 ---
 
