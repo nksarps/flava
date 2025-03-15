@@ -32,8 +32,8 @@ Below are the available API endpoints for interacting with the Flava API:
 
 | Method | Endpoint          | Description               |
 |------- |------------------ |--------------------------|
-| GET    | `/recipes`         | Retrieve all recipes      |
-| POST   | `/recipes`         | Create a new recipe       |
+| GET    | `/recipes/`         | Retrieve all recipes      |
+| POST   | `/recipes/`         | Create a new recipe       |
 | GET    | `/recipes/{id}`    | Retrieve a recipe by ID   |
 | PUT    | `/recipes/{id}`    | Update a recipe by ID     |
 | DELETE | `/recipes/{id}`    | Delete a recipe by ID     |
@@ -49,32 +49,16 @@ Below are the available API endpoints for interacting with the Flava API:
 
 ---
 
-### 🏷 Category & Tag Endpoints
-
-| Method | Endpoint            | Description                   |
-|------- |--------------------|------------------------------|
-| GET    | `/categories`        | Retrieve all categories       |
-| POST   | `/categories`        | Create a new category         |
-| GET    | `/tags`              | Retrieve all tags             |
-| POST   | `/tags`              | Create a new tag              |
-
----
-
-### ⚙️ Authentication Endpoints (Optional)
+### ⚙️ Authentication Endpoints
 
 | Method | Endpoint         | Description                      |
 |------- |----------------- |---------------------------------|
-| POST   | `/auth/register`  | Register a new user              |
-| POST   | `/auth/login`     | Login user & retrieve token     |
-
----
-
-### 🧹 Admin/Utility Endpoints (Optional/Future)
-
-| Method | Endpoint             | Description                     |
-|------- |---------------------|--------------------------------|
-| GET    | `/admin/analytics`   | Get platform analytics          |
-| GET    | `/admin/popular`     | Get most popular recipes        |
+| POST   | `/users/`  | Register a new user              |
+| POST   | `/users/login`     | Login user & retrieve token     |
+| GET   | `/users/verify-email`     | Verify user via email    |
+| POST   | `/users/password-reset-request`     | Request password reset     |
+| POST   | `/users/reset-password`     | Reset user password     |
+| POST   | `/users/{id}`     | Get user with ID     |
 
 ---
 
